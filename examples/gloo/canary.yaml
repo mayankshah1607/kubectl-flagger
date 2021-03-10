@@ -27,7 +27,7 @@ spec:
     threshold: 5
     # max traffic percentage routed to canary
     # percentage (0-100)
-    maxWeight: 50
+    maxWeight: 35
     # canary increment step
     # percentage (0-100)
     stepWeight: 5
@@ -53,10 +53,6 @@ spec:
         metadata:
           type: cmd
           cmd: "hey -z 2m -q 5 -c 2 -host app.example.com http://gateway-proxy.gloo-system"
-      - name: "rollout gate"
-        type: rollout
-        timeout: 120m
-        url: http://flagger-loadtester.test/gate/check
-      - name: "promotion gate"
+      - name: "ask for promotion"
         type: confirm-promotion
         url: http://flagger-loadtester.test/gate/check

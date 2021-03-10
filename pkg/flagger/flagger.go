@@ -3,6 +3,7 @@ package flagger
 import (
 	"context"
 	"fmt"
+	"log"
 	"os"
 
 	"github.com/mayankshah1607/kubectl-flagger/pkg/k8s"
@@ -15,8 +16,9 @@ import (
 func getCurlCmdWithArgs(name, namespace, endpoint string) []string {
 	return []string{
 		"curl",
+		"-i",
 		"-d",
-		fmt.Sprintf("'{\"name\": \"%s\", \"namespace\", \"%s\"}", name, namespace),
+		fmt.Sprintf("{\"name\": \"%s\", \"namespace\": \"%s\"}", name, namespace),
 		fmt.Sprintf("http://localhost:8080%s", endpoint),
 	}
 }
@@ -24,7 +26,7 @@ func getCurlCmdWithArgs(name, namespace, endpoint string) []string {
 func getLoadtesterPodName(loadtesterNs string) (string, error) {
 	// select loadtester pod
 	options := metav1.ListOptions{
-		LabelSelector: "app.kubernetes.io/name=loadtester",
+		LabelSelector: "app=flagger-loadtester",
 	}
 
 	podList, err := k8s.Client.CoreV1().Pods(loadtesterNs).List(context.Background(), options)
@@ -37,6 +39,7 @@ func getLoadtesterPodName(loadtesterNs string) (string, error) {
 
 func execAndRunCurl(name, namespace, loadtesterNs, endpoint string) error {
 	curlCmd := getCurlCmdWithArgs(name, namespace, endpoint)
+	log.Println(curlCmd)
 	podName, err := getLoadtesterPodName(loadtesterNs)
 	if err != nil {
 		return fmt.Errorf("could not get flagger-loadtester pod name:%s", err)
