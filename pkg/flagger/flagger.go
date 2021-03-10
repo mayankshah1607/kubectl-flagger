@@ -3,8 +3,8 @@ package flagger
 import (
 	"context"
 	"fmt"
-	"log"
 	"os"
+	"time"
 
 	"github.com/mayankshah1607/kubectl-flagger/pkg/k8s"
 	v1 "k8s.io/api/core/v1"
@@ -16,7 +16,6 @@ import (
 func getCurlCmdWithArgs(name, namespace, endpoint string) []string {
 	return []string{
 		"curl",
-		"-i",
 		"-d",
 		fmt.Sprintf("{\"name\": \"%s\", \"namespace\": \"%s\"}", name, namespace),
 		fmt.Sprintf("http://localhost:8080%s", endpoint),
@@ -33,13 +32,15 @@ func getLoadtesterPodName(loadtesterNs string) (string, error) {
 	if err != nil {
 		return "", err
 	}
-
-	return (*podList).Items[0].Name, nil
+	pods := (*podList).Items
+	if len(pods) == 0 {
+		return "", fmt.Errorf("no pods found for flagger-loadtester")
+	}
+	return pods[0].Name, nil
 }
 
 func execAndRunCurl(name, namespace, loadtesterNs, endpoint string) error {
 	curlCmd := getCurlCmdWithArgs(name, namespace, endpoint)
-	log.Println(curlCmd)
 	podName, err := getLoadtesterPodName(loadtesterNs)
 	if err != nil {
 		return fmt.Errorf("could not get flagger-loadtester pod name:%s", err)
@@ -79,6 +80,15 @@ func Promote(name, namespace, loadtesterNs string) error {
 	if err != nil {
 		return err
 	}
+
+	// don't leave the gate open
+	// TODO: make this configurable
+	time.Sleep(6 * time.Second)
+	err = execAndRunCurl(name, namespace, loadtesterNs, "/gate/close")
+	if err != nil {
+		return fmt.Errorf("failed to automatically close the gate: %s", err)
+	}
+
 	return nil
 }
 

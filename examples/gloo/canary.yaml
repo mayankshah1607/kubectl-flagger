@@ -56,3 +56,6 @@ spec:
       - name: "ask for promotion"
         type: confirm-promotion
         url: http://flagger-loadtester.test/gate/check
+      - name: "manually increase traffic"
+        type: confirm-traffic-promotion
+        url: http://flagger-loadtester.test/gate/check

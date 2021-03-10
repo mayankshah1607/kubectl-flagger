@@ -1,5 +1,5 @@
 all:
-	$(MAKE) install_gloo install_flagger install_app install_loadtester
+	$(MAKE) install_gloo install_app
 
 install_gloo:
 	helm repo add gloo https://storage.googleapis.com/solo-public-helm
@@ -14,7 +14,9 @@ install_flagger:
 	helm upgrade -i flagger flagger/flagger \
 	--namespace gloo-system \
 	--set prometheus.install=true \
-	--set meshProvider=gloo
+	--set meshProvider=gloo \
+	--set image.repository=docker.io/mayankshah1607/flagger-grofers \
+	--set image.tag=latest
 
 uninstall_flagger:
 	helm uninstall flagger -n gloo
