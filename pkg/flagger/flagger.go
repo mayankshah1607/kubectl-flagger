@@ -3,7 +3,6 @@ package flagger
 import (
 	"context"
 	"fmt"
-	"log"
 	"os"
 
 	"github.com/mayankshah1607/kubectl-flagger/pkg/k8s"
@@ -72,17 +71,19 @@ func execAndRunCurl(name, namespace, loadtesterNs, endpoint string) error {
 }
 
 // Promote promotes a canary from flagger loadtester pod
-func Promote(name, namespace, loadtesterNs string) {
+func Promote(name, namespace, loadtesterNs string) error {
 	err := execAndRunCurl(name, namespace, loadtesterNs, "/gate/open")
 	if err != nil {
-		log.Fatalf(err.Error())
+		return err
 	}
+	return nil
 }
 
 // Rollback aborts a canary
-func Rollback(name, namespace, loadtesterNs string) {
+func Rollback(name, namespace, loadtesterNs string) error {
 	err := execAndRunCurl(name, namespace, loadtesterNs, "/rollback/open")
 	if err != nil {
-		log.Fatalf(err.Error())
+		return err
 	}
+	return nil
 }

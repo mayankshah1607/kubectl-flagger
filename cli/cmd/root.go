@@ -20,7 +20,7 @@ import (
 )
 
 type cmd struct {
-	LoadTesterNs string
+	loadTesterNs string
 }
 
 type cmdArgs struct {
@@ -49,6 +49,6 @@ func init() {
 	// Cobra supports persistent flags, which, if defined here,
 	// will be global for your application.
 
-	rootCmd.Flags().StringVarP(&config.LoadTesterNs,
+	rootCmd.Flags().StringVarP(&config.loadTesterNs,
 		"namespace", "n", "test", "Namespace where flagger-loadtester is installed")
 }

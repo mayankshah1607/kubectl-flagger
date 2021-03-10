@@ -34,7 +34,11 @@ var promoteCmd = &cobra.Command{
 		}
 
 		opts := parseArgs(args)
-		flagger.Promote(opts.name, opts.namespace, config.LoadTesterNs)
+		err := flagger.Promote(opts.name, opts.namespace, config.loadTesterNs)
+		if err != nil {
+			log.Fatalf("failed to promote:\n%s", err)
+		}
+		log.Printf("Successfully promoted canary/%s in namespace/%s", opts.name, opts.namespace)
 	},
 }
 

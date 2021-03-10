@@ -33,7 +33,11 @@ var rollbackCmd = &cobra.Command{
 		}
 
 		opts := parseArgs(args)
-		flagger.Rollback(opts.name, opts.namespace, config.LoadTesterNs)
+		err := flagger.Rollback(opts.name, opts.namespace, config.loadTesterNs)
+		if err != nil {
+			log.Fatalf("failed to rollback:\n%s", err)
+		}
+		log.Printf("Successfully aborted canary/%s in namespace/%s", opts.name, opts.namespace)
 	},
 }
 
