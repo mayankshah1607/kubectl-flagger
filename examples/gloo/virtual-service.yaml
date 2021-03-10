@@ -1,0 +1,16 @@
+apiVersion: gateway.solo.io/v1
+kind: VirtualService
+metadata:
+  name: podinfo
+  namespace: test
+spec:
+  virtualHost:
+    domains:
+      - 'app.example.com'
+    routes:
+      - matchers:
+         - prefix: /
+        delegateAction:
+          ref:
+            name: podinfo
+            namespace: test
