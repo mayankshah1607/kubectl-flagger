@@ -24,7 +24,7 @@ import (
 
 // promoteCmd represents the promote command
 var promoteCmd = &cobra.Command{
-	Use:     "promote [canary name] [canary namespace] [FLAGS]",
+	Use:     "promote [canary name] [canary namespace]",
 	Short:   "Promote a canary deployment to primary",
 	Long:    "Promote a canary deployment to primary",
 	Example: "kubectl flagger promote podinfo test -n flagger",
