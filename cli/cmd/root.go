@@ -21,6 +21,7 @@ import (
 
 type cmd struct {
 	loadTesterNs string
+	openDuration int32
 }
 
 type cmdArgs struct {
@@ -51,4 +52,6 @@ func init() {
 
 	rootCmd.PersistentFlags().StringVarP(&config.loadTesterNs,
 		"namespace", "n", "ci", "Namespace where flagger-loadtester is installed")
+	rootCmd.PersistentFlags().Int32VarP(&config.openDuration,
+		"open-duration", "t", 3, "Duration (in seconds) after which gate must be closed automatically")
 }

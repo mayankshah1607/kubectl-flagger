@@ -75,15 +75,13 @@ func execAndRunCurl(name, namespace, loadtesterNs, endpoint string) error {
 }
 
 // Promote promotes a canary from flagger loadtester pod
-func Promote(name, namespace, loadtesterNs string) error {
+func Promote(name, namespace, loadtesterNs string, openDuration int32) error {
 	err := execAndRunCurl(name, namespace, loadtesterNs, "/gate/open")
 	if err != nil {
 		return err
 	}
 
-	// don't leave the gate open
-	// TODO: make this configurable
-	time.Sleep(6 * time.Second)
+	time.Sleep(time.Duration(openDuration) * time.Second)
 	err = execAndRunCurl(name, namespace, loadtesterNs, "/gate/close")
 	if err != nil {
 		return fmt.Errorf("failed to automatically close the gate: %s", err)

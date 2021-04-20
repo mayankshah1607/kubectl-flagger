@@ -34,7 +34,7 @@ var promoteCmd = &cobra.Command{
 		}
 
 		opts := parseArgs(args)
-		err := flagger.Promote(opts.name, opts.namespace, config.loadTesterNs)
+		err := flagger.Promote(opts.name, opts.namespace, config.loadTesterNs, config.openDuration)
 		if err != nil {
 			log.Fatalf("failed to promote:\n%s", err)
 		}
