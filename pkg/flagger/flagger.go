@@ -91,10 +91,17 @@ func Promote(name, namespace, loadtesterNs string, openDuration int32) error {
 }
 
 // Rollback aborts a canary
-func Rollback(name, namespace, loadtesterNs string) error {
+func Rollback(name, namespace, loadtesterNs string, closeDuration int32) error {
 	err := execAndRunCurl(name, namespace, loadtesterNs, "/rollback/open")
 	if err != nil {
 		return err
 	}
+
+	time.Sleep(time.Duration(closeDuration) * time.Second)
+	err = execAndRunCurl(name, namespace, loadtesterNs, "/rollback/close")
+	if err != nil {
+		return fmt.Errorf("failed to automatically close rollback: %s", err)
+	}
+
 	return nil
 }

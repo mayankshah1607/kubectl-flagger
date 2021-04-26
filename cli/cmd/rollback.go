@@ -33,7 +33,7 @@ var rollbackCmd = &cobra.Command{
 		}
 
 		opts := parseArgs(args)
-		err := flagger.Rollback(opts.name, opts.namespace, config.loadTesterNs)
+		err := flagger.Rollback(opts.name, opts.namespace, config.loadTesterNs, config.openDuration)
 		if err != nil {
 			log.Fatalf("failed to rollback:\n%s", err)
 		}
